@@ -1,0 +1,73 @@
+setClass("filehashSQLite",
+         representation(datafile = "character",
+                        dbcon = "SQLiteConnection"),
+         contains = "filehash"
+         )
+
+createSQLite <- function(dbName) {
+    if(!require(RSQLite, quietly = TRUE))
+        stop("package 'RSQLite' not available")
+    dbcon <- dbConnect(dbDriver("SQLite"), dbName)
+
+    ## Create single data table for keys and values
+    SQLcmd <- paste("CREATE TABLE \"", dbName, "\" (\"key\" TEXT, \"value\" TEXT)",
+                    sep = "")
+    dbGetQuery(dbcon, SQLcmd)
+    TRUE
+}
+
+initializeSQLite <- function(dbName) {
+    if(!require(RSQLite, quietly = TRUE))
+        stop("package 'RSQLite' not available")
+    dbcon <- dbConnect(dbDriver("SQLite"), dbName)
+    new("filehashSQLite", datafile = dbName, dbcon = dbcon,
+        name = basename(dbName))
+}
+    
+setMethod("dbInsert",
+          signature(db = "filehashSQLite", key = "character", value = "ANY"),
+          function(db, key, value) {
+              dbDelete(db, key)
+              SQLcmd <- paste("INSERT INTO ", db@name, " (key, value) VALUES (\"",
+                              key, "\", \"", serialize(value, NULL, ascii = TRUE),
+                              "\")", sep = "")
+              dbGetQuery(db@dbcon, SQLcmd)
+              TRUE
+          })
+
+setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
+          function(db, key) {
+              SQLcmd <- paste("SELECT value FROM ", db@name, " WHERE key == \"",
+                              key, "\"", sep = "")
+              data <- dbGetQuery(db@dbcon, SQLcmd)
+              if(is.null(data$value))
+                  stop("no value associated with key ", sQuote(key))
+              unserialize(data$value)
+          })
+
+setMethod("dbDelete", signature(db = "filehashSQLite", key = "character"),
+          function(db, key) {
+              SQLcmd <- paste("DELETE FROM ", db@name, " WHERE key == \"",
+                              key, "\"", sep = "")
+              dbGetQuery(db@dbcon, SQLcmd)
+              TRUE
+          })
+
+setMethod("dbList", "filehashSQLite",
+          function(db) {
+              SQLcmd <- paste("SELECT key FROM", db@name)
+              data <- dbGetQuery(db@dbcon, SQLcmd)
+              data$key
+          })
+
+setMethod("dbExists", signature(db = "filehashSQLite", key = "character"),
+          function(db, key) {
+              keys <- dbList(db)
+              key %in% keys
+          })
+
+setMethod("dbUnlink", "filehashSQLite",
+          function(db) {
+              unlink(db@datafile)
+              TRUE
+          })
