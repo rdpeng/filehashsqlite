@@ -5,8 +5,6 @@ setClass("filehashSQLite",
          )
 
 createSQLite <- function(dbName) {
-    if(!require(RSQLite, quietly = TRUE))
-        stop("package 'RSQLite' not available")
     dbcon <- dbConnect(dbDriver("SQLite"), dbName)
 
     ## Create single data table for keys and values
@@ -17,8 +15,6 @@ createSQLite <- function(dbName) {
 }
 
 initializeSQLite <- function(dbName) {
-    if(!require(RSQLite, quietly = TRUE))
-        stop("package 'RSQLite' not available")
     dbcon <- dbConnect(dbDriver("SQLite"), dbName)
     new("filehashSQLite", datafile = dbName, dbcon = dbcon,
         name = basename(dbName))
