@@ -1,1 +1,13 @@
-exportClasses("filehashSQLite")
+exportClasses(
+              "filehashSQLite"
+              )
+
+exportMethods(
+              "dbInsert",
+              "dbFetch",
+              "dbUnlink",
+              "dbExists",
+              "dbList",
+              "dbDelete"
+              )
+              
