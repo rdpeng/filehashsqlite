@@ -11,3 +11,5 @@ exportMethods(
               "dbDelete"
               )
               
+import(filehash)
+

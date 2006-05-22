@@ -5,7 +5,7 @@
         if(!require(package, quietly = TRUE, character.only = TRUE))
             stop(sQuote(package), " package required")
     }
-    ## Regsiter 'filehash' database format
+    ## Register 'filehash' database format
     r <- list(create = createSQLite, initialize = initializeSQLite)
     registerFormatDB("SQLite", r)
 }
