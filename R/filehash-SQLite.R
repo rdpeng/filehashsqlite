@@ -24,18 +24,19 @@ setMethod("dbInsert",
           signature(db = "filehashSQLite", key = "character", value = "ANY"),
           function(db, key, value) {
               dbDelete(db, key)
+              data <- serialize(value, NULL, ascii = TRUE)
               SQLcmd <- paste("INSERT INTO ", db@name, " (key, value) VALUES (\"",
-                              key, "\", \"", serialize(value, NULL, ascii = TRUE),
-                              "\")", sep = "")
+                              key, "\", \"", data, "\")", sep = "")
               dbGetQuery(db@dbcon, SQLcmd)
               TRUE
           })
 
 setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
           function(db, key) {
-              SQLcmd <- paste("SELECT value FROM ", db@name, " WHERE key == \"",
+              SQLcmd <- paste("SELECT value FROM ", db@name, " WHERE key = \"",
                               key, "\"", sep = "")
               data <- dbGetQuery(db@dbcon, SQLcmd)
+              
               if(is.null(data$value))
                   stop("no value associated with key ", sQuote(key))
               unserialize(data$value)
@@ -43,7 +44,7 @@ setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
 
 setMethod("dbDelete", signature(db = "filehashSQLite", key = "character"),
           function(db, key) {
-              SQLcmd <- paste("DELETE FROM ", db@name, " WHERE key == \"",
+              SQLcmd <- paste("DELETE FROM ", db@name, " WHERE key = \"",
                               key, "\"", sep = "")
               dbGetQuery(db@dbcon, SQLcmd)
               TRUE
