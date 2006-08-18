@@ -52,7 +52,7 @@ setMethod("dbDelete", signature(db = "filehashSQLite", key = "character"),
           function(db, key) {
               ## SQLcmd <- paste("DELETE FROM ", db@name, " WHERE key = \"",
               ##                 key, "\"", sep = "")
-              SQLcmd <- sprintf("DELETE FROM %s WHERE key = \"%s", db@name, key)
+              SQLcmd <- sprintf("DELETE FROM %s WHERE key = \"%s\"", db@name, key)
               dbGetQuery(db@dbcon, SQLcmd)
               TRUE
           })
