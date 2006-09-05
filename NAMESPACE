@@ -11,5 +11,5 @@ exportMethods(
               "dbDelete"
               )
               
-import(filehash)
+importClassesFrom(filehash, "filehash")
 
