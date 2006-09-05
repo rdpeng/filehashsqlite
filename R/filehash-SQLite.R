@@ -23,11 +23,14 @@ initializeSQLite <- function(dbName) {
 setMethod("dbInsert",
           signature(db = "filehashSQLite", key = "character", value = "ANY"),
           function(db, key, value) {
-              dbDelete(db, key)
               data <- serialize(value, NULL, ascii = TRUE)
+              
+              if(inherits(data, "raw"))
+                  data <- rawToChar(data)
               SQLcmd <- sprintf("INSERT INTO %s (key,value) VALUES (\"%s\",\"%s\")",
                                 db@name, key, data)
-
+              
+              dbDelete(db, key)
               dbGetQuery(db@dbcon, SQLcmd)
               TRUE
           })
