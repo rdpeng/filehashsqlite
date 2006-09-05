@@ -3,7 +3,7 @@
 
     for(package in pkgList) {
         if(!require(package, quietly = TRUE, character.only = TRUE))
-            stop(sQuote(package), " package required")
+            stop(gettextf("'%s' package required", package))
     }
     ## Register 'filehash' database format
     r <- list(create = createSQLite, initialize = initializeSQLite)
@@ -12,8 +12,8 @@
 
 .onAttach <- function(lib, pkg) {
     dcf <- read.dcf(file.path(lib, pkg, "DESCRIPTION"))
-    msg <- paste(dcf[, "Title"], " (version ",
-                 as.character(dcf[, "Version"]), ")", sep = "")
+    msg <- gettextf("%s (version %s %s)", dcf[, "Title"],
+                    as.character(dcf[, "Version"]), dcf[, "Date"])
     writeLines(strwrap(msg))
 }
 
