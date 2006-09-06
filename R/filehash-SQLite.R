@@ -24,9 +24,13 @@ setMethod("dbInsert",
           signature(db = "filehashSQLite", key = "character", value = "ANY"),
           function(db, key, value) {
               data <- serialize(value, NULL, ascii = TRUE)
-              
-              if(inherits(data, "raw"))
+
+              ## Before 2.4.0, 'serialize(connection = NULL, ascii =
+              ## TRUE)' returned a character vector.  From 2.4.0 on,
+              ## serialize always returns a 'raw' vector.
+              if(getRversion() >= package_version("2.4.0"))
                   data <- rawToChar(data)
+              
               SQLcmd <- sprintf("INSERT INTO %s (key,value) VALUES (\"%s\",\"%s\")",
                                 db@name, key, data)
               
@@ -42,7 +46,7 @@ setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
               data <- dbGetQuery(db@dbcon, SQLcmd)
               
               if(is.null(data$value))
-                  stop("no value associated with key ", sQuote(key))
+                  stop(gettextf("no value associated with key '%s'", key))
               unserialize(data$value)
           })
 
