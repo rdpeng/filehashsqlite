@@ -7,6 +7,9 @@
 \alias{dbInsert,filehashSQLite,character-method}
 \alias{dbList,filehashSQLite-method}
 \alias{dbUnlink,filehashSQLite-method}
+\alias{dbMultiFetch,filehashSQLite,character-method}
+\alias{[,filehashSQLite,character,missing,missing-method}
+
 
 \title{Class "filehashSQLite"}
 \description{Create a 'filehash' database using SQLite as the backend}
@@ -33,7 +36,16 @@
     \item{dbInsert}{\code{signature(db = "filehashSQLite", key = "character")}: ... }
     \item{dbList}{\code{signature(db = "filehashSQLite")}: ... }
     \item{dbUnlink}{\code{signature(db = "filehashSQLite")}: ... }
-	 }
+    \item{dbMultiFetch}{\code{signature(db = "filehashSQLite", key = "character")}: ... }
+  }
+}
+
+\details{
+  \code{"filehashSQLite"} databases have a \code{"["} method that can be
+  used to extract multiple elements in an efficient manner.  The return
+  value is a list with names equal to the keys passed to \code{"["}.
+  If there are keys passed to \code{"["} that do not exist in the
+  database, a warning is given.
 }
 
 \author{Roger D. Peng}

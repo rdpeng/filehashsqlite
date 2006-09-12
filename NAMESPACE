@@ -8,8 +8,10 @@ exportMethods(
               "dbUnlink",
               "dbExists",
               "dbList",
-              "dbDelete"
+              "dbDelete",
+              "dbMultiFetch",
+              "["
               )
               
-## importClassesFrom(filehash, "filehash")
+importClassesFrom(filehash, "filehash")
 

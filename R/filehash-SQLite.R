@@ -19,7 +19,7 @@ initializeSQLite <- function(dbName) {
     new("filehashSQLite", datafile = dbName, dbcon = dbcon,
         name = basename(dbName))
 }
-    
+
 setMethod("dbInsert",
           signature(db = "filehashSQLite", key = "character", value = "ANY"),
           function(db, key, value) {
@@ -48,6 +48,34 @@ setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
               if(is.null(data$value))
                   stop(gettextf("no value associated with key '%s'", key))
               unserialize(data$value)
+          })
+
+setMethod("dbMultiFetch",
+          signature(db = "filehashSQLite", key = "character"),
+          function(db, key, ...) {
+              keylist <- paste("\"", key, "\"", collapse = ",", sep = "")
+              SQLcmd <- sprintf("SELECT key, value FROM %s WHERE key IN (%s)",
+                                db@name, keylist)
+              data <- dbGetQuery(db@dbcon, SQLcmd)
+
+              if(is.null(data))
+                  stop("no values associated with keys")
+              
+              k <- data$key
+              r <- lapply(data$value, unserialize)
+              names(r) <- k
+              
+              if(length(k) != length(key))
+                  warning(gettextf("no values associated with keys %s",
+                                   paste("'", setdiff(key, k), "'", sep = "",
+                                         collapse = ", ")))
+              r
+          })
+
+setMethod("[", signature(x = "filehashSQLite", i = "character", j = "missing",
+                         drop = "missing"),
+          function(x, i , j, drop) {
+              dbMultiFetch(x, i)
           })
 
 setMethod("dbDelete", signature(db = "filehashSQLite", key = "character"),
