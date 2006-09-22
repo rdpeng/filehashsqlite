@@ -14,7 +14,10 @@
 \title{Class "filehashSQLite"}
 \description{Create a 'filehash' database using SQLite as the backend}
 \section{Objects from the Class}{
-  Objects can be created by calls of the form \code{new("filehashSQLite", ...)}.
+  Objects can be created by calls of the form
+  \code{new("filehashSQLite", ...)}.  More likely, one will use the
+  functions \code{dbCreate} and \code{dbInit} from the \code{filehash}
+  package.
 }
 \section{Slots}{
   \describe{
@@ -30,31 +33,44 @@
 }
 \section{Methods}{
   \describe{
-    \item{dbDelete}{\code{signature(db = "filehashSQLite", key = "character")}: ... }
-    \item{dbExists}{\code{signature(db = "filehashSQLite", key = "character")}: ... }
-    \item{dbFetch}{\code{signature(db = "filehashSQLite", key = "character")}: ... }
-    \item{dbInsert}{\code{signature(db = "filehashSQLite", key = "character")}: ... }
-    \item{dbList}{\code{signature(db = "filehashSQLite")}: ... }
-    \item{dbUnlink}{\code{signature(db = "filehashSQLite")}: ... }
-    \item{dbMultiFetch}{\code{signature(db = "filehashSQLite", key = "character")}: ... }
+    \item{dbDelete}{\code{signature(db = "filehashSQLite", key =
+	"character")}: delete a key-value pair from the database }
+    \item{dbExists}{\code{signature(db = "filehashSQLite", key =
+	"character")}: check the existence of a specific key or vector
+      of keys }
+    \item{dbFetch}{\code{signature(db = "filehashSQLite", key =
+	"character")}: retrieve the value associated with a specific key }
+    \item{dbInsert}{\code{signature(db = "filehashSQLite", key =
+	"character")}: insert a key-value pair }
+    \item{dbList}{\code{signature(db = "filehashSQLite")}: return
+      character vector of keys currently stored in the database }
+    \item{dbUnlink}{\code{signature(db = "filehashSQLite")}: delete the
+      entire database }
+    \item{dbMultiFetch}{\code{signature(db = "filehashSQLite", key =
+	"character")}: return (as a named list) the values associated
+      with a vector of keys }
   }
 }
 
 \details{
+  The \code{"filehashSQLite"} class represents a \code{"filehash"}
+  key-value database using the SQLite DBM as the backend.  Objects are
+  stored in a single SQLite database table along with their keys.
+}
+
+\note{  
   \code{"filehashSQLite"} databases have a \code{"["} method that can be
   used to extract multiple elements in an efficient manner.  The return
   value is a list with names equal to the keys passed to \code{"["}.
   If there are keys passed to \code{"["} that do not exist in the
   database, a warning is given.
-}
 
-\author{Roger D. Peng}
-
-\note{
   The \code{"SQLite"} format for \code{filehash} uses an ASCII
   serialization of the data which could result in some rounding error
   for floating point numbers.
 }
+
+\author{Roger D. Peng}
 
 \examples{
 dbCreate("myTestDB", type = "SQLite")
