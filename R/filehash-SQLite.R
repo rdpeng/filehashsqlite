@@ -28,15 +28,16 @@ createSQLite <- function(dbName) {
     dbcon <- dbConnect(dbDriver("SQLite"), dbName)
 
     ## Create single data table for keys and values
-    SQLcmd <- sprintf("CREATE TABLE \"%s\" (\"key\" TEXT, \"value\" TEXT)", dbName)
-                    
+    SQLcmd <- paste("CREATE TABLE \"", dbName,
+                    "\" (\"key\" TEXT, \"value\" TEXT)", sep = "")
+    
     dbGetQuery(dbcon, SQLcmd)
     TRUE
 }
 
 initializeSQLite <- function(dbName) {
     dbcon <- dbConnect(dbDriver("SQLite"), dbName)
-    new("filehashSQLite", datafile = dbName, dbcon = dbcon,
+    new("filehashSQLite", datafile = normalizePath(dbName), dbcon = dbcon,
         name = basename(dbName))
 }
 
@@ -44,16 +45,17 @@ setMethod("dbInsert",
           signature(db = "filehashSQLite", key = "character", value = "ANY"),
           function(db, key, value) {
               data <- serialize(value, NULL, ascii = TRUE)
-
+              
               ## Before 2.4.0, 'serialize(connection = NULL, ascii =
               ## TRUE)' returned a character vector.  From 2.4.0 on,
               ## serialize always returns a 'raw' vector.
-              if(getRversion() >= package_version("2.4.0"))
-                  data <- rawToChar(data)
+              data <- rawToChar(data)
               
-              SQLcmd <- sprintf("INSERT INTO %s (key,value) VALUES (\"%s\",\"%s\")",
-                                db@name, key, data)
-              
+              SQLcmd <- paste("INSERT INTO ", db@name,
+                              " (key,value) VALUES (\"",
+                              key, "\",\"", data, "\")",
+                              sep = "")
+              ## Remove key before inserting it
               dbDelete(db, key)
               dbGetQuery(db@dbcon, SQLcmd)
               TRUE
@@ -61,8 +63,8 @@ setMethod("dbInsert",
 
 setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
           function(db, key) {
-              SQLcmd <- sprintf("SELECT value FROM %s WHERE key = \"%s\"",
-                                db@name, key)
+              SQLcmd <- paste("SELECT value FROM ", db@name,
+                              " WHERE key = \"", key, "\"", sep = "")
               data <- dbGetQuery(db@dbcon, SQLcmd)
               
               if(is.null(data$value))
@@ -74,8 +76,8 @@ setMethod("dbMultiFetch",
           signature(db = "filehashSQLite", key = "character"),
           function(db, key, ...) {
               keylist <- paste("\"", key, "\"", collapse = ",", sep = "")
-              SQLcmd <- sprintf("SELECT key, value FROM %s WHERE key IN (%s)",
-                                db@name, keylist)
+              SQLcmd <- paste("SELECT key, value FROM ", db@name,
+                              " WHERE key IN (", keylist, ")", sep = "")
               data <- dbGetQuery(db@dbcon, SQLcmd)
 
               if(is.null(data))
@@ -100,14 +102,15 @@ setMethod("[", signature(x = "filehashSQLite", i = "character", j = "missing",
 
 setMethod("dbDelete", signature(db = "filehashSQLite", key = "character"),
           function(db, key) {
-              SQLcmd <- sprintf("DELETE FROM %s WHERE key = \"%s\"", db@name, key)
+              SQLcmd <- paste("DELETE FROM ", db@name,
+                              " WHERE key = \"", key, "\"", sep = "")
               dbGetQuery(db@dbcon, SQLcmd)
               TRUE
           })
 
 setMethod("dbList", "filehashSQLite",
           function(db) {
-              SQLcmd <- sprintf("SELECT key FROM %s", db@name)
+              SQLcmd <- paste("SELECT key FROM", db@name)
               data <- dbGetQuery(db@dbcon, SQLcmd)
               if(length(data$key) == 0)
                   character(0)
