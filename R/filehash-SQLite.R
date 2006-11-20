@@ -41,34 +41,17 @@ initializeSQLite <- function(dbName) {
         name = basename(dbName))
 }
 
-mapData <- function(x) {
-    ## Before 2.4.0, 'serialize(connection = NULL, ascii =
-    ## TRUE)' returned a character vector.  From 2.4.0 on,
-    ## serialize always returns a 'raw' vector.
-    r <- vector("character", length = length(x))
-    for(i in seq(along = r))
-        r[i] <- rawToChar(serialize(x[i], NULL, ascii = TRUE))
-    r
-}
-
-unMapData <- function(x) {
-    r <- vector("character", length = length(x))
-    for(i in seq(along = r))
-        r[i] <- unserialize(x)
-    r
-}
-
 setMethod("dbInsert",
           signature(db = "filehashSQLite", key = "character", value = "ANY"),
           function(db, key, value) {
-              data <- mapData(data)
+              data <- rawToChar(serialize(data, NULL, ascii = TRUE))
               
-              SQLcmd <- paste("INSERT INTO ", db@name,
-                              " (key,value) VALUES (\"",
-                              mapData(key), "\",\"", data, "\")",
+              SQLcmd <- paste("INSERT INTO ", db@name," (key,value) VALUES (\"",
+                              key, "\",\"", data, "\")",
                               sep = "")
+
               ## Remove key before inserting it
-              dbDelete(db, mapData(key))
+              dbDelete(db, key)
               dbGetQuery(db@dbcon, SQLcmd)
               TRUE
           })
@@ -76,7 +59,7 @@ setMethod("dbInsert",
 setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
           function(db, key) {
               SQLcmd <- paste("SELECT value FROM ", db@name,
-                              " WHERE key = \"", mapData(key), "\"", sep = "")
+                              " WHERE key = \"", key, "\"", sep = "")
               data <- dbGetQuery(db@dbcon, SQLcmd)
               
               if(is.null(data$value))
@@ -87,7 +70,8 @@ setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
 setMethod("dbMultiFetch",
           signature(db = "filehashSQLite", key = "character"),
           function(db, key, ...) {
-              keylist <- paste("\"", mapData(key), "\"", collapse = ",", sep = "")
+              keylist <- paste("\"", key,
+                               "\"", collapse = ",", sep = "")
               SQLcmd <- paste("SELECT key, value FROM ", db@name,
                               " WHERE key IN (", keylist, ")", sep = "")
               data <- dbGetQuery(db@dbcon, SQLcmd)
@@ -95,7 +79,7 @@ setMethod("dbMultiFetch",
               if(is.null(data))
                   stop("no values associated with keys")
               
-              k <- unMapData(data$key)
+              k <- as.character(data$key)
               r <- lapply(data$value, unserialize)
               names(r) <- k
               
@@ -115,7 +99,7 @@ setMethod("[", signature(x = "filehashSQLite", i = "character", j = "missing",
 setMethod("dbDelete", signature(db = "filehashSQLite", key = "character"),
           function(db, key) {
               SQLcmd <- paste("DELETE FROM ", db@name,
-                              " WHERE key = \"", mapData(key), "\"", sep = "")
+                              " WHERE key = \"", key, "\"", sep = "")
               dbGetQuery(db@dbcon, SQLcmd)
               TRUE
           })
@@ -127,7 +111,7 @@ setMethod("dbList", "filehashSQLite",
               if(length(data$key) == 0)
                   character(0)
               else
-                  unMapData(data$key)
+                  as.character(data$key)
           })
 
 setMethod("dbExists", signature(db = "filehashSQLite", key = "character"),
@@ -139,5 +123,4 @@ setMethod("dbExists", signature(db = "filehashSQLite", key = "character"),
 setMethod("dbUnlink", "filehashSQLite",
           function(db) {
               unlink(db@datafile)
-              TRUE
           })
