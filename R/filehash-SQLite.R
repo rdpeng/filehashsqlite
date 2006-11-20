@@ -44,12 +44,17 @@ initializeSQLite <- function(dbName) {
 setMethod("dbInsert",
           signature(db = "filehashSQLite", key = "character", value = "ANY"),
           function(db, key, value) {
-              data <- rawToChar(serialize(data, NULL, ascii = TRUE))
+              data <- serialize(value, NULL, ascii = TRUE)
               
-              SQLcmd <- paste("INSERT INTO ", db@name," (key,value) VALUES (\"",
+              ## Before 2.4.0, 'serialize(connection = NULL, ascii =
+              ## TRUE)' returned a character vector.  From 2.4.0 on,
+              ## serialize always returns a 'raw' vector.
+              data <- rawToChar(data)
+              
+              SQLcmd <- paste("INSERT INTO ", db@name,
+                              " (key,value) VALUES (\"",
                               key, "\",\"", data, "\")",
                               sep = "")
-
               ## Remove key before inserting it
               dbDelete(db, key)
               dbGetQuery(db@dbcon, SQLcmd)
@@ -70,8 +75,7 @@ setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
 setMethod("dbMultiFetch",
           signature(db = "filehashSQLite", key = "character"),
           function(db, key, ...) {
-              keylist <- paste("\"", key,
-                               "\"", collapse = ",", sep = "")
+              keylist <- paste("\"", key, "\"", collapse = ",", sep = "")
               SQLcmd <- paste("SELECT key, value FROM ", db@name,
                               " WHERE key IN (", keylist, ")", sep = "")
               data <- dbGetQuery(db@dbcon, SQLcmd)
@@ -79,7 +83,7 @@ setMethod("dbMultiFetch",
               if(is.null(data))
                   stop("no values associated with keys")
               
-              k <- as.character(data$key)
+              k <- data$key
               r <- lapply(data$value, unserialize)
               names(r) <- k
               
@@ -111,7 +115,7 @@ setMethod("dbList", "filehashSQLite",
               if(length(data$key) == 0)
                   character(0)
               else
-                  as.character(data$key)
+                  data$key
           })
 
 setMethod("dbExists", signature(db = "filehashSQLite", key = "character"),
@@ -123,4 +127,5 @@ setMethod("dbExists", signature(db = "filehashSQLite", key = "character"),
 setMethod("dbUnlink", "filehashSQLite",
           function(db) {
               unlink(db@datafile)
+              TRUE
           })
