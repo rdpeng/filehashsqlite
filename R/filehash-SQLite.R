@@ -83,7 +83,7 @@ setMethod("dbMultiFetch",
               if(is.null(data))
                   stop("no values associated with keys")
               
-              k <- data$key
+              k <- as.character(data$key)
               r <- lapply(data$value, unserialize)
               names(r) <- k
               
@@ -115,7 +115,7 @@ setMethod("dbList", "filehashSQLite",
               if(length(data$key) == 0)
                   character(0)
               else
-                  data$key
+                  as.character(data$key)
           })
 
 setMethod("dbExists", signature(db = "filehashSQLite", key = "character"),
