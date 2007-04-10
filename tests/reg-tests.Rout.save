@@ -20,7 +20,7 @@ Loading required package: filehash
 Simple key-value database (0.9-4 2007-04-09)
 Loading required package: DBI
 Loading required package: RSQLite
-Simple key-value database using SQLite (0.1-2 2006-11-20)
+Simple key-value database using SQLite (0.2 2007-04-10)
 > 
 > dbCreate("test1", "SQLite")
 [1] TRUE
