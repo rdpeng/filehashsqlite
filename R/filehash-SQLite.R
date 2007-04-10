@@ -29,7 +29,7 @@ createSQLite <- function(dbName) {
 
     ## Create single data table for keys and values
     SQLcmd <- paste("CREATE TABLE \"", dbName,
-                    "\" (\"key\" TEXT, \"value\" TEXT)", sep = "")
+                    "\" (\"key\" TEXT, \"value\" BLOB)", sep = "")
     
     dbGetQuery(dbcon, SQLcmd)
     TRUE
