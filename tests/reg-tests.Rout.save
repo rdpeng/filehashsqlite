@@ -1,6 +1,6 @@
 
-R version 2.4.0 (2006-10-03)
-Copyright (C) 2006 The R Foundation for Statistical Computing
+R version 2.5.0 beta (2007-04-10 r41110)
+Copyright (C) 2007 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -17,17 +17,24 @@ Type 'q()' to quit R.
 
 > library(filehashSQLite)
 Loading required package: filehash
-Simple key-value database (version 0.9 2006-11-08)
+Simple key-value database (0.9-4 2007-04-09)
 Loading required package: DBI
 Loading required package: RSQLite
-Simple key-value database using SQLite (version 0.1-2 2006-11-20)
+Simple key-value database using SQLite (0.1-2 2006-11-20)
 > 
 > dbCreate("test1", "SQLite")
 [1] TRUE
 > db <- dbInit("test1", "SQLite")
 > 
+> set.seed(234)
 > val <- rnorm(1000)
 > 
 > dbInsert(db, "a", val)
 [1] TRUE
+> x <- dbFetch(db, "a")
+> 
+> str(x)
+ num [1:1000]  0.661 -2.053 -1.499  1.471  1.459 ...
+> 
+> stopifnot(identical(x, val))
 > 

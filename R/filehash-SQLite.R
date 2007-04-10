@@ -29,7 +29,7 @@ createSQLite <- function(dbName) {
 
     ## Create single data table for keys and values
     SQLcmd <- paste("CREATE TABLE \"", dbName,
-                    "\" (\"key\" TEXT, \"value\" BLOB)", sep = "")
+                    "\" (\"key\" TEXT, \"value\" TEXT)", sep = "")
     
     dbGetQuery(dbcon, SQLcmd)
     TRUE
@@ -41,16 +41,23 @@ initializeSQLite <- function(dbName) {
         name = basename(dbName))
 }
 
+toString <- function(x) {
+    bytes <- serialize(x, NULL)
+    int <- as.integer(bytes)
+    paste(as.character(int), collapse = ":")
+}
+
+toObject <- function(x) {
+    s <- strsplit(x, ":", fixed = TRUE)[[1]]
+    int <- as.integer(s)
+    bytes <- as.raw(int)
+    unserialize(bytes)
+}
+
 setMethod("dbInsert",
           signature(db = "filehashSQLite", key = "character", value = "ANY"),
           function(db, key, value) {
-              data <- serialize(value, NULL, ascii = TRUE)
-              
-              ## Before 2.4.0, 'serialize(connection = NULL, ascii =
-              ## TRUE)' returned a character vector.  From 2.4.0 on,
-              ## serialize always returns a 'raw' vector.
-              data <- rawToChar(data)
-              
+              data <- toString(value)
               SQLcmd <- paste("INSERT INTO ", db@name,
                               " (key,value) VALUES (\"",
                               key, "\",\"", data, "\")",
@@ -69,7 +76,7 @@ setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
               
               if(is.null(data$value))
                   stop(gettextf("no value associated with key '%s'", key))
-              unserialize(data$value)
+              toObject(data$value)
           })
 
 setMethod("dbMultiFetch",
@@ -84,7 +91,7 @@ setMethod("dbMultiFetch",
                   stop("no values associated with keys")
               
               k <- as.character(data$key)
-              r <- lapply(data$value, unserialize)
+              r <- lapply(data$value, toObject)
               names(r) <- k
               
               if(length(k) != length(key))
