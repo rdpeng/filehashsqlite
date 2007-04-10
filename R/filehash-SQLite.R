@@ -28,7 +28,7 @@ createSQLite <- function(dbName) {
     dbcon <- dbConnect(dbDriver("SQLite"), dbName)
 
     ## Create single data table for keys and values
-    SQLcmd <- paste("CREATE TABLE \"", dbName,
+    SQLcmd <- paste("CREATE TABLE \"", basename(dbName),
                     "\" (\"key\" TEXT, \"value\" TEXT)", sep = "")
     
     dbGetQuery(dbcon, SQLcmd)
