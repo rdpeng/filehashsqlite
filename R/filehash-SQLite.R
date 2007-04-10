@@ -48,6 +48,11 @@ toString <- function(x) {
 }
 
 toObject <- function(x) {
+    ## For compatibility with previous version
+    out <- try(unserialize(x), silent = TRUE)
+
+    if(!inherits(out, "try-error")) 
+        return(out)
     s <- strsplit(x, ":", fixed = TRUE)[[1]]
     int <- as.integer(s)
     bytes <- as.raw(int)
