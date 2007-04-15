@@ -2,7 +2,8 @@ Package:  filehashSQLite
 Version:  0.2
 Date:  2007-04-10
 LazyLoad:  yes
-Depends:  R (>= 2.4.1), methods, filehash, DBI, RSQLite
+Depends:  R (>= 2.4.1), methods, filehash 
+Imports:  RSQLite
 Title:  Simple key-value database using SQLite
 Author:  Roger D. Peng <rpeng@jhsph.edu>
 Maintainer:  Roger D. Peng <rpeng@jhsph.edu>
