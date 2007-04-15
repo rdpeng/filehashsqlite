@@ -61,7 +61,7 @@ toObject <- function(x) {
 
 setMethod("dbInsert",
           signature(db = "filehashSQLite", key = "character", value = "ANY"),
-          function(db, key, value) {
+          function(db, key, value, ...) {
               data <- toString(value)
               SQLcmd <- paste("INSERT INTO ", db@name,
                               " (key,value) VALUES (\"",
@@ -74,7 +74,7 @@ setMethod("dbInsert",
           })
 
 setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
-          function(db, key) {
+          function(db, key, ...) {
               SQLcmd <- paste("SELECT value FROM ", db@name,
                               " WHERE key = \"", key, "\"", sep = "")
               data <- dbGetQuery(db@dbcon, SQLcmd)
@@ -113,7 +113,7 @@ setMethod("[", signature(x = "filehashSQLite", i = "character", j = "missing",
           })
 
 setMethod("dbDelete", signature(db = "filehashSQLite", key = "character"),
-          function(db, key) {
+          function(db, key, ...) {
               SQLcmd <- paste("DELETE FROM ", db@name,
                               " WHERE key = \"", key, "\"", sep = "")
               dbGetQuery(db@dbcon, SQLcmd)
@@ -121,7 +121,7 @@ setMethod("dbDelete", signature(db = "filehashSQLite", key = "character"),
           })
 
 setMethod("dbList", "filehashSQLite",
-          function(db) {
+          function(db, ...) {
               SQLcmd <- paste("SELECT key FROM", db@name)
               data <- dbGetQuery(db@dbcon, SQLcmd)
               if(length(data$key) == 0)
@@ -131,13 +131,17 @@ setMethod("dbList", "filehashSQLite",
           })
 
 setMethod("dbExists", signature(db = "filehashSQLite", key = "character"),
-          function(db, key) {
+          function(db, key, ...) {
               keys <- dbList(db)
               key %in% keys
           })
 
 setMethod("dbUnlink", "filehashSQLite",
-          function(db) {
+          function(db, ...) {
               unlink(db@datafile)
-              TRUE
+          })
+
+setMethod("dbDisconnect", "filehashSQLite",
+          function(db, ...) {
+              invisible()
           })
