@@ -70,7 +70,6 @@ setMethod("dbInsert",
               ## Remove key before inserting it
               dbDelete(db, key)
               dbGetQuery(db@dbcon, SQLcmd)
-              TRUE
           })
 
 setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
@@ -117,7 +116,6 @@ setMethod("dbDelete", signature(db = "filehashSQLite", key = "character"),
               SQLcmd <- paste("DELETE FROM ", db@name,
                               " WHERE key = \"", key, "\"", sep = "")
               dbGetQuery(db@dbcon, SQLcmd)
-              TRUE
           })
 
 setMethod("dbList", "filehashSQLite",
