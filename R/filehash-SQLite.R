@@ -144,6 +144,7 @@ setMethod("dbExists", signature(db = "filehashSQLite", key = "character"),
 
 setMethod("dbUnlink", "filehashSQLite",
           function(db, ...) {
+              dbDisconnect(db)
               v <- unlink(db@datafile)
               invisible(isTRUE(v == 0))
           })
