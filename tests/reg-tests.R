@@ -12,3 +12,5 @@ x <- dbFetch(db, "a")
 str(x)
 
 stopifnot(identical(x, val))
+
+dbDisconnect(db)
