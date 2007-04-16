@@ -113,9 +113,8 @@ setMethod("dbMultiFetch",
               r
           })
 
-setMethod("[", signature(x = "filehashSQLite", i = "character", j = "missing",
-                         drop = "missing"),
-          function(x, i , j, drop) {
+setMethod("[", signature(x = "filehashSQLite", i = "character"),
+          function(x, i , j, ..., drop) {
               dbMultiFetch(x, i)
           })
 

@@ -9,7 +9,7 @@
 \alias{dbUnlink,filehashSQLite-method}
 \alias{dbMultiFetch,filehashSQLite,character-method}
 \alias{dbDisconnect,filehashSQLite-method}
-\alias{[,filehashSQLite,character,missing,missing-method}
+\alias{[,filehashSQLite,character,ANY,ANY-method}
 
 
 \title{Class "filehashSQLite"}
