@@ -17,3 +17,17 @@ exportMethods(
 importClassesFrom(filehash,
                   "filehash"
                   )
+
+importFrom(filehash,
+           "dbInsert",
+           "dbFetch",
+           "dbMultiFetch",
+           "dbList",
+           "dbExists",
+           "dbDelete",
+           "dbUnlink"
+           )
+
+importFrom(DBI,
+           "dbDisconnect"
+           )
