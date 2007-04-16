@@ -17,24 +17,3 @@ exportMethods(
 importClassesFrom(filehash,
                   "filehash"
                   )
-
-## importClassesFrom(RSQLite,
-##                   "SQLiteConnection"
-##                   )
-
-## importFrom(RSQLite,
-##            "SQLite"
-##            )
-
-## importMethodsFrom(RSQLite,
-##                   "dbGetQuery",
-##                   "dbConnect"
-##                   )
-
-importFrom(DBI,
-           "dbGetQuery"
-           )
-
-
-import(RSQLite)
-

@@ -20,26 +20,32 @@
 
 setClass("filehashSQLite",
          representation(datafile = "character",
-                        dbcon = "SQLiteConnection"),
+                        dbcon = "SQLiteConnection",
+                        drv = "SQLiteDriver"),
          contains = "filehash"
          )
 
 createSQLite <- function(dbName) {
-    drv <- DBI::dbDriver("SQLite")
-    dbcon <- DBI::dbConnect(drv, dbName)
+    drv <- dbDriver("SQLite")
+    dbcon <- dbConnect(drv, dbName)
+    on.exit({
+        dbDisconnect(dbcon)
+        dbUnloadDriver(drv)
+    })
 
     ## Create single data table for keys and values
     SQLcmd <- paste("CREATE TABLE \"", basename(dbName),
                     "\" (\"key\" TEXT, \"value\" TEXT)", sep = "")
     
     dbGetQuery(dbcon, SQLcmd)
-    TRUE
+    invisible(TRUE)
 }
 
 initializeSQLite <- function(dbName) {
-    dbcon <- dbConnect(dbDriver("SQLite"), dbName)
+    drv <- dbDriver("SQLite")
+    dbcon <- dbConnect(drv, dbName)
     new("filehashSQLite", datafile = normalizePath(dbName), dbcon = dbcon,
-        name = basename(dbName))
+        drv = drv, name = basename(dbName))
 }
 
 toString <- function(x) {
@@ -144,7 +150,8 @@ setMethod("dbUnlink", "filehashSQLite",
           })
 
 setMethod("dbDisconnect", "filehashSQLite",
-          function(db, ...) {
-              DBI::dbDisconnect(db@dbcon)
+          function(conn, ...) {
+              dbDisconnect(db@dbcon)
+              dbUnloadDriver(db@drv)
               invisible(TRUE)
           })

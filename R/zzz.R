@@ -1,5 +1,5 @@
 .onLoad <- function(lib, pkg) {
-    pkgList <- c("methods", "filehash")
+    pkgList <- c("methods", "filehash", "DBI", "RSQLite")
 
     for(package in pkgList) {
         if(!require(package, quietly = TRUE, character.only = TRUE))

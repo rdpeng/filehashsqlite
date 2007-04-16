@@ -1,5 +1,5 @@
 
-R version 2.5.0 beta (2007-04-10 r41110)
+R version 2.5.0 beta (2007-04-13 r41147)
 Copyright (C) 2007 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
@@ -17,7 +17,7 @@ Type 'q()' to quit R.
 
 > library(filehashSQLite)
 Loading required package: filehash
-Simple key-value database (0.9-4 2007-04-09)
+Simple key-value database (1.0 2007-04-11)
 Loading required package: DBI
 Loading required package: RSQLite
 Simple key-value database using SQLite (0.2 2007-04-10)
@@ -30,11 +30,13 @@ Simple key-value database using SQLite (0.2 2007-04-10)
 > val <- rnorm(1000)
 > 
 > dbInsert(db, "a", val)
-[1] TRUE
 > x <- dbFetch(db, "a")
 > 
 > str(x)
  num [1:1000]  0.661 -2.053 -1.499  1.471  1.459 ...
 > 
 > stopifnot(identical(x, val))
+> 
+> dbDisconnect(db)
+[1] TRUE
 > 
