@@ -8,6 +8,7 @@
 \alias{dbList,filehashSQLite-method}
 \alias{dbUnlink,filehashSQLite-method}
 \alias{dbMultiFetch,filehashSQLite,character-method}
+\alias{dbDisconnect,filehashSQLite-method}
 \alias{[,filehashSQLite,character,missing,missing-method}
 
 
@@ -78,6 +79,8 @@
 \author{Roger D. Peng}
 
 \examples{
+library(filehashSQLite)
+
 dbCreate("myTestDB", type = "SQLite")
 db <- dbInit("myTestDB", type = "SQLite")
 

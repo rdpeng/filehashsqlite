@@ -25,7 +25,8 @@ setClass("filehashSQLite",
          )
 
 createSQLite <- function(dbName) {
-    dbcon <- dbConnect(dbDriver("SQLite"), dbName)
+    drv <- DBI::dbDriver("SQLite")
+    dbcon <- DBI::dbConnect(drv, dbName)
 
     ## Create single data table for keys and values
     SQLcmd <- paste("CREATE TABLE \"", basename(dbName),
@@ -144,5 +145,6 @@ setMethod("dbUnlink", "filehashSQLite",
 
 setMethod("dbDisconnect", "filehashSQLite",
           function(db, ...) {
+              DBI::dbDisconnect(db@dbcon)
               invisible(TRUE)
           })
