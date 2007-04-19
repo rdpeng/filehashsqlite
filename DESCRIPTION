@@ -1,6 +1,6 @@
 Package:  filehashSQLite
 Version:  0.2
-Date:  2007-04-10
+Date:  2007-04-19
 LazyLoad:  yes
 Depends:  R (>= 2.4.1), methods, filehash (>= 0.9), DBI, RSQLite
 Imports:  filehash, DBI
