@@ -151,7 +151,7 @@ setMethod("dbUnlink", "filehashSQLite",
 
 setMethod("dbDisconnect", "filehashSQLite",
           function(conn, ...) {
-              dbDisconnect(db@dbcon)
-              dbUnloadDriver(db@drv)
+              dbDisconnect(conn@dbcon)
+              dbUnloadDriver(conn@drv)
               invisible(TRUE)
           })
