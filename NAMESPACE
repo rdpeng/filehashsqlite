@@ -15,7 +15,7 @@ exportMethods(
               )
               
 importClassesFrom(filehash,
-                  "filehash"
+                  "filehash", "filehashDB1", "filehashRDS"
                   )
 
 importFrom(filehash,
