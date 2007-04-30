@@ -1,5 +1,5 @@
 
-R version 2.5.0 RC (2007-04-19 r41246)
+R version 2.5.0 (2007-04-23)
 Copyright (C) 2007 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
@@ -17,10 +17,10 @@ Type 'q()' to quit R.
 
 > library(filehashSQLite)
 Loading required package: filehash
-Simple key-value database (1.0 2007-04-11)
+Simple key-value database (1.0 2007-04-27)
 Loading required package: DBI
 Loading required package: RSQLite
-Simple key-value database using SQLite (0.2-1 2007-04-20)
+Simple key-value database using SQLite (0.2-2 2007-04-27)
 > 
 > dbCreate("test1", "SQLite")
 [1] TRUE
