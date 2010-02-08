@@ -22,11 +22,12 @@
 }
 \section{Slots}{
   \describe{
-    \item{\code{datafile}:}{character, full path to the file in
+    \item{datafile}{character, full path to the file in
       which the database should be stored}
-    \item{\code{dbcon}:}{Object of class
-      \code{"SQLiteConnection"}, a SQLite connection}
-    \item{\code{name}:}{character, the name of the database}
+    \item{dbcon}{Object of class \dQuote{SQLiteConnection}, a
+      SQLite connection}
+    \item{drv}{\sQuote{SQLite} driver}
+    \item{name}{character, the name of the database}
   }
 }
 \section{Extends}{
@@ -54,19 +55,19 @@
 }
 
 \details{
-  The \code{"filehashSQLite"} class represents a \code{"filehash"}
+  The \dQuote{filehashSQLite} class represents a \dQuote{filehash}
   key-value database using the SQLite DBM as the backend.  Objects are
   stored in a single SQLite database table along with their keys.
 }
 
 \note{  
-  \code{"filehashSQLite"} databases have a \code{"["} method that can be
+  \dQuote{filehashSQLite} databases have a \code{"["} method that can be
   used to extract multiple elements in an efficient manner.  The return
   value is a list with names equal to the keys passed to \code{"["}.
   If there are keys passed to \code{"["} that do not exist in the
   database, a warning is given.
 
-  The \code{"SQLite"} format for \code{filehash} uses an ASCII
+  The \dQuote{SQLite} format for \code{filehash} uses an ASCII
   serialization of the data which could result in some rounding error
   for floating point numbers.
 
