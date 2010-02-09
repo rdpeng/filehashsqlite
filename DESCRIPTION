@@ -8,4 +8,4 @@ Author:  Roger D. Peng <rpeng@jhsph.edu>
 Maintainer:  Roger D. Peng <rpeng@jhsph.edu>
 Description:  Simple key-value database using SQLite as the backend
 License:  GPL (>= 2)
-
+URL: http://github.com/rdpeng/filehashsqlite
