@@ -25,6 +25,7 @@ importFrom(filehash,
            "dbList",
            "dbExists",
            "dbDelete",
+	   "registerFormatDB",
            "dbUnlink"
            )
 
