@@ -29,6 +29,6 @@ importFrom(filehash,
            "dbUnlink"
            )
 
-importFrom(DBI,
-           "dbDisconnect"
-           )
+import(methods)
+import(RSQLite)
+import(DBI)
