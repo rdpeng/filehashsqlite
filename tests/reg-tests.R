@@ -1,4 +1,4 @@
-suppressMessages(library(filehashSQLite))
+suppressPackageStartupMessages(library(filehashSQLite))
 
 dbCreate("test1", "SQLite")
 db <- dbInit("test1", "SQLite")
