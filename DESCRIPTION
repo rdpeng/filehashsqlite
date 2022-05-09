@@ -5,6 +5,6 @@ Imports: DBI, RSQLite, methods
 Title:  Simple Key-Value Database Using SQLite
 Author:  Roger D. Peng <rpeng@jhsph.edu>
 Maintainer:  Roger D. Peng <rpeng@jhsph.edu>
-Description:  Simple key-value database using SQLite as the backend.
+Description:  Simple key-value database using SQLite as the back end.
 License:  GPL (>= 2)
 URL: https://github.com/rdpeng/filehashsqlite
