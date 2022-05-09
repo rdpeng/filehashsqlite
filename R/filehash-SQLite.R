@@ -37,7 +37,7 @@ createSQLite <- function(dbName) {
     SQLcmd <- paste("CREATE TABLE \"", basename(dbName),
                     "\" (\"key\" TEXT, \"value\" TEXT)", sep = "")
     
-    dbGetQuery(dbcon, SQLcmd)
+    dbExecute(dbcon, SQLcmd)
     invisible(TRUE)
 }
 
@@ -76,7 +76,7 @@ setMethod("dbInsert",
                               sep = "")
               ## Remove key before inserting it
               dbDelete(db, key)
-              dbGetQuery(db@dbcon, SQLcmd)
+              dbExecute(db@dbcon, SQLcmd)
               invisible(TRUE)
           })
 
@@ -122,7 +122,7 @@ setMethod("dbDelete", signature(db = "filehashSQLite", key = "character"),
           function(db, key, ...) {
               SQLcmd <- paste("DELETE FROM ", db@name,
                               " WHERE key = \"", key, "\"", sep = "")
-              dbGetQuery(db@dbcon, SQLcmd)
+              dbExecute(db@dbcon, SQLcmd)
               invisible(TRUE)
           })
 

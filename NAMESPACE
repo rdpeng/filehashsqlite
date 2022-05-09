@@ -30,5 +30,12 @@ importFrom(filehash,
            )
 
 import(methods)
-import(RSQLite)
-import(DBI)
+importFrom(RSQLite, "dbDriver")
+importFrom(DBI, 
+           "dbDriver",
+           "dbExecute",
+           "dbConnect", 
+           "dbDisconnect", 
+           "dbUnloadDriver",
+           "dbGetQuery"
+           )

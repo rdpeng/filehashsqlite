@@ -1,11 +1,10 @@
 Package:  filehashSQLite
 Version:  0.2-5
-Date:  2014-02-22
-Depends:  R (>= 3.0.0), methods, filehash (>= 1.0), RSQLite
-Imports: DBI
+Depends:  R (>= 4.0.0), filehash
+Imports: DBI, RSQLite, methods
 Title:  Simple key-value database using SQLite
 Author:  Roger D. Peng <rpeng@jhsph.edu>
 Maintainer:  Roger D. Peng <rpeng@jhsph.edu>
-Description:  Simple key-value database using SQLite as the backend
+Description:  Simple key-value database using SQLite as the backend.
 License:  GPL (>= 2)
 URL: http://github.com/rdpeng/filehashsqlite
