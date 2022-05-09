@@ -80,6 +80,7 @@
 \author{Roger D. Peng}
 
 \examples{
+\dontrun{
 library(filehashSQLite)
 
 dbCreate("myTestDB", type = "SQLite")
@@ -92,5 +93,6 @@ db$b <- "a character element"
 with(db, mean(a))
 
 cat(db$b, "\n")
+}
 }
 \keyword{classes}
