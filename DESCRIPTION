@@ -1,7 +1,7 @@
 Package: filehashSQLite
 Version: 0.2-5
 Depends: R (>= 4.0.0), filehash
-Imports: DBI, RSQLite, methods
+Imports: RSQLite, methods, DBI
 Title: Simple Key-Value Database Using SQLite
 Author: Roger D. Peng <rpeng@jhsph.edu>
 Maintainer: Roger D. Peng <rpeng@jhsph.edu>

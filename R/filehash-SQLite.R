@@ -1,5 +1,5 @@
 ######################################################################
-## Copyright (C) 2006, Roger D. Peng <rpeng@jhsph.edu>
+## Copyright (C) 2006--2022, Roger D. Peng <rpeng@jhsph.edu>
 ##     
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -17,7 +17,12 @@
 ## 02110-1301, USA
 #####################################################################
 
-
+#' Filehash SQLite Class
+#' 
+#' @import methods
+#' @importClassesFrom RSQLite SQLiteConnection SQLiteDriver
+#' @importClassesFrom filehash filehash
+#' @exportClass filehashSQLite
 setClass("filehashSQLite",
          representation(datafile = "character",
                         dbcon = "SQLiteConnection",
@@ -25,6 +30,7 @@ setClass("filehashSQLite",
          contains = "filehash"
          )
 
+#' @importFrom DBI dbDriver dbConnect
 createSQLite <- function(dbName) {
     drv <- dbDriver("SQLite")
     dbcon <- dbConnect(drv, dbName)
@@ -41,6 +47,7 @@ createSQLite <- function(dbName) {
     invisible(TRUE)
 }
 
+#' @importFrom RSQLite dbDriver
 initializeSQLite <- function(dbName) {
     drv <- dbDriver("SQLite")
     dbcon <- dbConnect(drv, dbName)
@@ -66,6 +73,9 @@ toObject <- function(x) {
     unserialize(bytes)
 }
 
+#' @exportMethod dbInsert
+#' @importFrom filehash dbInsert dbDelete
+#' @importFrom DBI dbExecute
 setMethod("dbInsert",
           signature(db = "filehashSQLite", key = "character", value = "ANY"),
           function(db, key, value, ...) {
@@ -80,6 +90,8 @@ setMethod("dbInsert",
               invisible(TRUE)
           })
 
+#' @exportMethod dbFetch
+#' @importFrom filehash dbFetch
 setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
           function(db, key, ...) {
               SQLcmd <- paste("SELECT value FROM ", db@name,
@@ -91,6 +103,9 @@ setMethod("dbFetch", signature(db = "filehashSQLite", key = "character"),
               toObject(data$value)
           })
 
+#' @exportMethod dbMultiFetch
+#' @importFrom DBI dbGetQuery
+#' @importFrom filehash dbMultiFetch
 setMethod("dbMultiFetch",
           signature(db = "filehashSQLite", key = "character"),
           function(db, key, ...) {
@@ -113,11 +128,16 @@ setMethod("dbMultiFetch",
               r
           })
 
+#' @exportMethod "["
+#' @importFrom filehash dbMultiFetch
 setMethod("[", signature(x = "filehashSQLite", i = "character"),
           function(x, i , j, ..., drop) {
               dbMultiFetch(x, i)
           })
 
+#' @exportMethod dbDelete
+#' @importFrom filehash dbDelete
+#' @importFrom DBI dbExecute
 setMethod("dbDelete", signature(db = "filehashSQLite", key = "character"),
           function(db, key, ...) {
               SQLcmd <- paste("DELETE FROM ", db@name,
@@ -126,6 +146,9 @@ setMethod("dbDelete", signature(db = "filehashSQLite", key = "character"),
               invisible(TRUE)
           })
 
+#' @exportMethod dbList
+#' @importFrom filehash dbList
+#' @importFrom DBI dbGetQuery
 setMethod("dbList", "filehashSQLite",
           function(db, ...) {
               SQLcmd <- paste("SELECT key FROM", db@name)
@@ -136,12 +159,16 @@ setMethod("dbList", "filehashSQLite",
                   as.character(data$key)
           })
 
+#' @exportMethod dbExists
+#' @importFrom filehash dbExists
 setMethod("dbExists", signature(db = "filehashSQLite", key = "character"),
           function(db, key, ...) {
               keys <- dbList(db)
               key %in% keys
           })
 
+#' @exportMethod dbUnlink
+#' @importFrom filehash dbUnlink
 setMethod("dbUnlink", "filehashSQLite",
           function(db, ...) {
               dbDisconnect(db)
@@ -149,9 +176,14 @@ setMethod("dbUnlink", "filehashSQLite",
               invisible(isTRUE(v == 0))
           })
 
+#' @export
+setGeneric("dbDisconnect", DBI::dbDisconnect)
+
+#' @exportMethod dbDisconnect
+#' @importFrom DBI dbDisconnect dbUnloadDriver
 setMethod("dbDisconnect", "filehashSQLite",
           function(conn, ...) {
-              dbDisconnect(conn@dbcon)
-              dbUnloadDriver(conn@drv)
-              invisible(TRUE)
+                  dbDisconnect(conn@dbcon)
+                  dbUnloadDriver(conn@drv)
+                  invisible(TRUE)
           })
