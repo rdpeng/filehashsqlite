@@ -1,5 +1,5 @@
 Package: filehashSQLite
-Version: 0.2-5
+Version: 0.2-6
 Depends: R (>= 4.0.0), filehash
 Imports: RSQLite, methods, DBI
 Title: Simple Key-Value Database Using SQLite
